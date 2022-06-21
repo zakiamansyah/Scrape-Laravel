@@ -14,9 +14,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 use App\Http\Controllers\ScraperController;
+use App\Http\Controllers\CrawlerController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('/scraper', [ScraperController::class, 'scrapping']);
+Route::get('/crawler', [CrawlerController::class, 'getCrawler']);
