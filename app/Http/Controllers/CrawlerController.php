@@ -40,16 +40,17 @@ class CrawlerController extends Controller
             $content = $response->getBody()->getContents();
             $crawler = new Crawler($content);
 
-            $_this = $this;
+            $self = $this;
             $data = $crawler->filter('span.ratiobox')
-                            ->each(function (Crawler $node, $i) use($_this) {
-                                return $_this->getNodeContent($node);
+                            ->each(function (Crawler $node, $i) use($self) {
+                                return $self->getNodeContent($node);
                             });
 
-            $url = "https://www.detik.com/tag";
-            $contents = file_get_contents($url);
-            $name = substr($url, strrpos($url, '/') + 1);
-            dd($name);
+            // $url = "https://www.detik.com/tag";
+            // $contents = file_get_contents($url);
+            // $name = substr($url, strrpos($url, '/') + 1);
+            // dd($data);
+            Storage::disk('local')->put('example.json', json_encode($data));
 
         } catch(Exception $e) {
             echo $e->getMessage();
@@ -71,10 +72,10 @@ class CrawlerController extends Controller
 
     public function getNodeContent($node)
     {
-        $array = [
-            'foto' => $this->hasContent($node->filter('.ratiobox_content img')) != false ? $node->filter('.ratiobox_content img')->attr('src') : ''
-        ];
+        // $array = [
+        //     'foto' => $this->hasContent($node->filter('.ratiobox_content img')) != false ? $node->filter('.ratiobox_content img')->attr('src') : ''
+        // ];
 
-        return $array;
+        return $this->hasContent($node->filter('.ratiobox_content img')) != false ? $node->filter('.ratiobox_content img')->attr('src') : '';
     }
 }
