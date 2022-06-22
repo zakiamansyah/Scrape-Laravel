@@ -6,6 +6,7 @@ use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\DomCrawler\Crawler;
 
 
@@ -34,18 +35,34 @@ class CrawlerController extends Controller
 
     public function getCrawler()
     {
-        $response = $this->client->get('https://www.detik.com/tag/virus-corona');
+        try {
+            $response = $this->client->get('https://www.detik.com/tag/virus-corona');
+            $content = $response->getBody()->getContents();
+            $crawler = new Crawler($content);
 
-        $content = $response->getBody()->getContents();
-        $crawler = new Crawler( $content );
+            $_this = $this;
+            $data = $crawler->filter('span.ratiobox')
+                            ->each(function (Crawler $node, $i) use($_this) {
+                                return $_this->getNodeContent($node);
+                            });
 
-        $ini = $this;
-        $data = $crawler->filter('div.list')
-                        ->each(function (Crawler $node) use($ini) {
-                            return $ini->getNodeContent($node);
-                        });
-        dd($data);
+            $url = "https://www.detik.com/tag";
+            $contents = file_get_contents($url);
+            $name = substr($url, strrpos($url, '/') + 1);
+            dd($name);
+
+        } catch(Exception $e) {
+            echo $e->getMessage();
+        }
     }
+
+    // public function saveImage()
+    // {
+    //     $url = "http://www.google.co.in/intl/en_com/images/srpr/logo1w.png";
+    //     $contents = file_get_contents($url);
+    //     $name = substr($url, strrpos($url, '/') + 1);
+
+    // }
 
     public function hasContent($node)
     {
@@ -55,10 +72,7 @@ class CrawlerController extends Controller
     public function getNodeContent($node)
     {
         $array = [
-            'title' => $this->hasContent($node->filter('.post__content h2')) != false ? $node->filter('.post__content h2')->text() : '',
-            'content' => $this->hasContent($node->filter('.post__content p')) != false ? $node->filter('.post__content p')->text() : '',
-            'author' => $this->hasContent($node->filter('.author__content h4 a')) != false ? $node->filter('.author__content h4 a')->text() : '',
-            'featured_image' => $this->hasContent($node->filter('.post__image a img')) != false ? $node->filter('.post__image a img')->eq(0)->attr('src') : ''
+            'foto' => $this->hasContent($node->filter('.ratiobox_content img')) != false ? $node->filter('.ratiobox_content img')->attr('src') : ''
         ];
 
         return $array;
