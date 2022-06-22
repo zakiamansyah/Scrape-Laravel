@@ -20,5 +20,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/scraper', [ScraperController::class, 'scrapping']);
+// Route::get('/scraper', [ScraperController::class, 'scrapping']);
 Route::get('/crawler', [CrawlerController::class, 'getCrawler']);
