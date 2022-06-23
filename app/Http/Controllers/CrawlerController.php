@@ -33,34 +33,43 @@ class CrawlerController extends Controller
         ]);
     }
 
+    private function getStr($start, $end, $string) {
+        if (!empty($string)) {
+        $setring = explode($start,$string);
+        $setring = explode($end,$setring[1]);
+        return $setring[0];
+        }
+    }
+
     public function getCrawler()
     {
-        // try{
-            $pagination = 2;
-            $response = $this->client->get("https://burst.shopify.com/photos/search?page={$pagination}&q=face");
-            // if($pagination != 1 || $pagination != 0){
-                // $response . "page=" . $pagination . "&q=face";
-            // }
+        try{
+                $response = $this->client->get("https://burst.shopify.com/photos/search?q=face");
+                $content = $response->getBody()->getContents();
+                $last = $this->getStr('<li class="last">','</li>',$content);
+                $last = $this->getStr('/photos/search?page=','&amp;q=',$last);
+                for ($i=1; $i <= $last; $i++) {
 
-            // dd($response);die;
-
+                $response = $this->client->get("https://burst.shopify.com/photos/search?page={$i}&q=face");
                 $content = $response->getBody()->getContents();
                 $crawler = new Crawler($content);
 
                 $self = $this;
-                $data = $crawler->filter('div.gutter-bottom')
+                $data = $crawler->filter('div.tile--with-overlay')
                                 ->each(function (Crawler $node, $i) use($self) {
                                     return $self->getNodeContent($node);
                                 });
 
-                dd($data);die;
+                // dd($data);die;
 
                 $string = implode("\n", $data);
 
-                Storage::disk('local')->put('foto.txt', $string);
-        // } catch(Exception $e) {
-        //     echo $e->getMessage();
-        // }
+                Storage::disk('local')->append('foto.txt', $string);
+                sleep(2);
+                }
+        } catch(Exception $e) {
+            echo $e->getMessage();
+        }
     }
 
     public function hasContent($node)
