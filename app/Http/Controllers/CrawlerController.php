@@ -35,35 +35,33 @@ class CrawlerController extends Controller
 
     public function getCrawler()
     {
-        try {
-            $response = $this->client->get('https://www.detik.com/tag/virus-corona');
-            $content = $response->getBody()->getContents();
-            $crawler = new Crawler($content);
+        // try{
+            $pagination = 2;
+            $response = $this->client->get("https://burst.shopify.com/photos/search?page={$pagination}&q=face");
+            // if($pagination != 1 || $pagination != 0){
+                // $response . "page=" . $pagination . "&q=face";
+            // }
 
-            $self = $this;
-            $data = $crawler->filter('span.ratiobox')
-                            ->each(function (Crawler $node, $i) use($self) {
-                                return $self->getNodeContent($node);
-                            });
+            // dd($response);die;
 
-            // $url = "https://www.detik.com/tag";
-            // $contents = file_get_contents($url);
-            // $name = substr($url, strrpos($url, '/') + 1);
-            // dd($data);
-            Storage::disk('local')->put('example.json', json_encode($data));
+                $content = $response->getBody()->getContents();
+                $crawler = new Crawler($content);
 
-        } catch(Exception $e) {
-            echo $e->getMessage();
-        }
+                $self = $this;
+                $data = $crawler->filter('div.gutter-bottom')
+                                ->each(function (Crawler $node, $i) use($self) {
+                                    return $self->getNodeContent($node);
+                                });
+
+                dd($data);die;
+
+                $string = implode("\n", $data);
+
+                Storage::disk('local')->put('foto.txt', $string);
+        // } catch(Exception $e) {
+        //     echo $e->getMessage();
+        // }
     }
-
-    // public function saveImage()
-    // {
-    //     $url = "http://www.google.co.in/intl/en_com/images/srpr/logo1w.png";
-    //     $contents = file_get_contents($url);
-    //     $name = substr($url, strrpos($url, '/') + 1);
-
-    // }
 
     public function hasContent($node)
     {
@@ -73,9 +71,10 @@ class CrawlerController extends Controller
     public function getNodeContent($node)
     {
         // $array = [
-        //     'foto' => $this->hasContent($node->filter('.ratiobox_content img')) != false ? $node->filter('.ratiobox_content img')->attr('src') : ''
+        //     'foto' => $this->hasContent($node->filter('.photo-card img')) != false ? $node->filter('.photo-card img')->attr('src') : ''
         // ];
 
-        return $this->hasContent($node->filter('.ratiobox_content img')) != false ? $node->filter('.ratiobox_content img')->attr('src') : '';
+        return $this->hasContent($node->filter('.ratio-box img')) != false ? $node->filter('.ratio-box img')->attr('src') : '';
+        // return $array;
     }
 }
