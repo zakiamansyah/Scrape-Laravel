@@ -8,7 +8,7 @@
 In this case I assume you have the following requirements:
 
 - [Chrome](https://www.google.com/intl/id/chrome/) Or [Firefox](https://www.mozilla.org/id/firefox/new/)
-- [Visual Studio Code] (https://code.visualstudio.com/download) 
+- [VSC] (https://code.visualstudio.com/download) 
 - [Apache](https://httpd.apache.org/) Or [Nginx](http://nginx.org/en/download.html)
 - [PHP](https://www.php.net/downloads)
 - [Composer](https://getcomposer.org/download/)
@@ -30,7 +30,6 @@ For global configuration there may require the Generate APP_KEY script:
 
 ```sh
 php artisan key:generate 
-php artisan event:generate
 php artisan storage:link
 ```
 
@@ -57,7 +56,9 @@ To use Scrape Image from CommandPrompt/Terminal must use the command:
 php artisan scrape:image
 ```
 
+Then :
+
 - Just wait until the process is complete
 - Then look in the folder storage/app there is a file name foto-face.txt
 
-> **Happy Coding:**. 😆
+> **Happy Coding**. 😆
