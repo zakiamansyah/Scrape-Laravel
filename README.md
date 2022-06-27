@@ -13,7 +13,9 @@ composer install
 
 The script above aims to clone and install the dependencies needed on the project, after everything goes well and there are no errors, you can make a configuration (.env) on your project in the following way?
 
-- copy .env.example to .env
+```sh
+copy .env.example to .env
+```
 - Then set the configuration according to your wishes.
 
 For global configuration there may require the Generate APP_KEY script:
