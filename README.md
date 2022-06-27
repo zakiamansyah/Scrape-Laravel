@@ -8,7 +8,7 @@
 In this case I assume you have the following requirements:
 
 - [Chrome](https://www.google.com/intl/id/chrome/) Or [Firefox](https://www.mozilla.org/id/firefox/new/)
-- [VSC] (https://code.visualstudio.com/download) 
+- [Visual Studio Code](https://code.visualstudio.com/download) 
 - [Apache](https://httpd.apache.org/) Or [Nginx](http://nginx.org/en/download.html)
 - [PHP](https://www.php.net/downloads)
 - [Composer](https://getcomposer.org/download/)
